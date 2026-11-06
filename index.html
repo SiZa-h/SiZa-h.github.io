@@ -1,1 +1,170 @@
-hhhhhh
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05060a">
+  <meta name="description" content="RaWaEa 的个人空间——在引力之外，收藏一束光。设计、代码与生活的观测记录。">
+  <title>RaWaEa · 寰宇观测站</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='31' fill='%23070a10'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%23000'/%3E%3Ccircle cx='32' cy='32' r='15' fill='none' stroke='%23e8c98b' stroke-width='2'/%3E%3Cellipse cx='32' cy='32' rx='27' ry='7.5' fill='none' stroke='%23e8c98b' stroke-opacity='.5' stroke-width='2' transform='rotate(-20 32 32)'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 背景：随机更换的 NASA 黑洞影像 -->
+  <div class="cosmos" id="cosmos" aria-hidden="true">
+    <div class="cosmos-photo" id="cosmosPhotoA"></div>
+    <div class="cosmos-photo" id="cosmosPhotoB"></div>
+    <div class="cosmos-veil"></div>
+    <span class="cosmos-credit" id="cosmosCredit"></span>
+  </div>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <div class="app" id="app">
+    <header class="topbar">
+      <a class="brand" href="#" data-home aria-label="回到首页">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span class="brand-copy">
+          <strong>RaWaEa</strong>
+          <small>OBSERVATORY · EST. 2026</small>
+        </span>
+      </a>
+
+      <div class="topbar-nav">
+        <span class="local-time" id="localTime">LOCAL 00:00</span>
+        <a class="nav-link" href="使用手册.html" target="_blank" rel="noreferrer">使用手册 <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <main class="stage">
+      <!-- 左：毛玻璃轮盘 -->
+      <aside class="wheel-panel" id="wheelPanel" aria-label="分区导航">
+        <div class="wheel-heading">
+          <span>ORBITAL INDEX</span>
+          <span id="wheelCounter">01 / 05</span>
+        </div>
+
+        <div class="wheel-wrap">
+          <div class="wheel" id="wheel">
+            <div class="wheel-glass" aria-hidden="true"></div>
+            <div class="wheel-rings" aria-hidden="true"></div>
+            <div class="wheel-ticks" aria-hidden="true"></div>
+            <div class="wheel-track" id="wheelTrack"></div>
+            <div class="wheel-center" aria-hidden="true">
+              <span class="wheel-center-index" id="centerIndex">01</span>
+              <span class="wheel-center-line"></span>
+              <span class="wheel-center-name" id="centerName">首页</span>
+              <span class="wheel-center-hint">SCROLL</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="wheel-controls">
+          <button class="round-button" id="prevButton" type="button" aria-label="上一项">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14 6-6 6 6"/></svg>
+          </button>
+          <span class="wheel-instruction"><i></i>滚动切换</span>
+          <button class="round-button" id="nextButton" type="button" aria-label="下一项">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 10 6 6 6-6"/></svg>
+          </button>
+        </div>
+
+        <div class="wheel-signature">
+          <span>RAWAEA</span>
+          <span>© <span data-year>2026</span></span>
+        </div>
+      </aside>
+
+      <!-- 右：青蓝长宽圆角毛玻璃展示框 -->
+      <section class="display-frame" id="displayFrame" aria-live="polite">
+        <div class="frame-glass">
+          <header class="frame-head" id="frameHead">
+            <div class="frame-heading">
+              <span class="frame-number" id="frameNumber">01</span>
+              <span class="frame-divider" aria-hidden="true"></span>
+              <div class="frame-heading-text">
+                <p class="frame-eyebrow" id="frameEyebrow">WELCOME · 序章</p>
+                <h1 class="frame-name" id="frameName">首页</h1>
+              </div>
+            </div>
+            <div class="frame-meta" id="frameMeta">
+              <span>HOME</span>
+              <span>01 / 05</span>
+            </div>
+          </header>
+
+          <div class="frame-body" id="frameBody" tabindex="0">
+            <div class="frame-content" id="frameContent"></div>
+          </div>
+
+          <footer class="frame-foot">
+            <span class="frame-note" id="frameNote">受引力约束的一小块安静</span>
+            <span class="frame-rule" aria-hidden="true"></span>
+            <span class="frame-hint"><i aria-hidden="true"></i>滚动阅读</span>
+          </footer>
+
+          <div class="frame-progress" aria-hidden="true"><span id="frameProgress"></span></div>
+        </div>
+
+        <span class="frame-corner frame-corner--tl" aria-hidden="true"></span>
+        <span class="frame-corner frame-corner--tr" aria-hidden="true"></span>
+        <span class="frame-corner frame-corner--bl" aria-hidden="true"></span>
+        <span class="frame-corner frame-corner--br" aria-hidden="true"></span>
+      </section>
+    </main>
+  </div>
+
+  <!-- 开屏：NASA 黑洞影像 + 探寻 -->
+  <section class="splash" id="splash" aria-label="开屏">
+    <div class="splash-visual" aria-hidden="true">
+      <img class="splash-image" id="splashImage" src="assets/splash-blackhole.jpg" alt="">
+    </div>
+    <div class="splash-veil" aria-hidden="true"></div>
+
+    <header class="splash-top">
+      <span class="splash-brand">RAW AE A</span>
+      <span class="splash-meta">OBSERVATORY · EST. 2026</span>
+    </header>
+
+    <div class="splash-bottom">
+      <p class="splash-copy">在引力之外，收藏一束光</p>
+      <button class="splash-enter" id="splashEnter" type="button">- 探寻 -</button>
+      <span class="splash-hint">点击任意处 · 或按任意键进入</span>
+    </div>
+
+    <span class="splash-credit">NASA / JPL-Caltech · PIA22085</span>
+  </section>
+
+  <div class="reader" id="reader" aria-hidden="true">
+    <div class="reader-backdrop" data-close-reader></div>
+    <article class="reader-card" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
+      <header class="reader-header">
+        <button class="reader-back" type="button" data-close-reader>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
+          <span>返回</span>
+        </button>
+        <button class="reader-close" type="button" data-close-reader aria-label="关闭文章">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+      <div class="reader-scroll" id="readerScroll">
+        <div class="reader-meta" id="readerMeta"></div>
+        <h1 class="reader-title" id="readerTitle"></h1>
+        <div class="reader-body" id="readerBody"></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="boot-error" id="bootError" hidden>
+    <p class="overline">SIGNAL LOST</p>
+    <h1>页面没有成功点亮</h1>
+    <p id="bootErrorText"></p>
+    <p>请确认 <code>index.html</code>、<code>app.js</code>、<code>轮盘/</code> 与 <code>展示框/</code> 位于同一个文件夹内。</p>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

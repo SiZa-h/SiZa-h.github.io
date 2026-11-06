@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#030811">
+  <title>使用手册 · RaWaEa 寰宇观测站</title>
+  <style>
+    :root {
+      --ice: #7fd8f5;
+      --ice-bright: #cdf3ff;
+      --ink: #eaf7ff;
+      --muted: rgba(196, 228, 244, 0.66);
+      --faint: rgba(164, 214, 240, 0.4);
+      --line: rgba(140, 224, 250, 0.18);
+      --line-soft: rgba(140, 224, 250, 0.09);
+      --serif: "Iowan Old Style", "Baskerville", "Songti SC", "Noto Serif SC", serif;
+      --sans: "Avenir Next", "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "SFMono-Regular", "Cascadia Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #030811;
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.85;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 78% 8%, rgba(90, 190, 240, 0.10), transparent 62%),
+        radial-gradient(ellipse 60% 50% at 12% 92%, rgba(90, 120, 200, 0.08), transparent 60%),
+        radial-gradient(1px 1px at 18% 22%, rgba(255, 255, 255, 0.55), transparent),
+        radial-gradient(1px 1px at 72% 14%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(1px 1px at 44% 68%, rgba(255, 255, 255, 0.35), transparent),
+        radial-gradient(1px 1px at 86% 62%, rgba(255, 255, 255, 0.45), transparent),
+        radial-gradient(1px 1px at 30% 88%, rgba(255, 255, 255, 0.3), transparent),
+        radial-gradient(2px 2px at 62% 40%, rgba(255, 245, 226, 0.5), transparent);
+      background-size: auto, auto, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+      pointer-events: none;
+    }
+
+    a { color: var(--ice-bright); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code {
+      padding: 2px 6px;
+      border: 1px solid var(--line-soft);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--ice-bright);
+      font-family: var(--mono);
+      font-size: 0.86em;
+    }
+
+    pre {
+      margin: 16px 0 22px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(8, 10, 16, 0.8);
+      color: rgba(226, 246, 255, 0.9);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.8;
+      tab-size: 2;
+    }
+
+    pre code {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 72px 0 100px;
+    }
+
+    .masthead {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kicker {
+      margin: 0 0 14px;
+      color: var(--ice);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.34em;
+    }
+
+    .masthead h1 {
+      margin: 0 0 12px;
+      font-family: var(--serif);
+      font-size: clamp(38px, 5vw, 60px);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+    }
+
+    .masthead p {
+      max-width: 540px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .masthead-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      color: var(--faint);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr);
+      gap: 64px;
+      margin-top: 54px;
+    }
+
+    .toc {
+      position: sticky;
+      top: 40px;
+      align-self: start;
+      padding: 4px 0;
+      border-left: 1px solid var(--line-soft);
+    }
+
+    .toc p {
+      margin: 0 0 14px;
+      padding-left: 16px;
+      color: var(--faint);
+      font-size: 8px;
+      letter-spacing: 0.26em;
+    }
+
+    .toc a {
+      display: block;
+      padding: 6px 0 6px 16px;
+      margin-left: -1px;
+      border-left: 1px solid transparent;
+      color: var(--muted);
+      font-size: 12px;
+      transition: color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .toc a:hover {
+      color: var(--ice-bright);
+      border-left-color: var(--ice);
+      text-decoration: none;
+    }
+
+    .doc section {
+      scroll-margin-top: 32px;
+      margin-bottom: 64px;
+    }
+
+    .doc h2 {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin: 0 0 18px;
+      font-family: var(--serif);
+      font-size: clamp(24px, 2.6vw, 34px);
+      font-weight: 400;
+      letter-spacing: -0.015em;
+    }
+
+    .doc h2 span {
+      color: var(--ice);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+    }
+
+    .doc h3 {
+      margin: 30px 0 10px;
+      color: var(--ice-bright);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    .doc p { margin: 0 0 14px; color: var(--muted); }
+    .doc p strong { color: var(--ink); font-weight: 600; }
+
+    .doc ul, .doc ol { margin: 0 0 16px; padding-left: 20px; color: var(--muted); }
+    .doc li { margin-bottom: 7px; }
+    .doc li::marker { color: var(--ice); }
+
+    .table-wrap { overflow-x: auto; margin: 16px 0 22px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line-soft);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--ice);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+    }
+
+    td { color: var(--muted); }
+    td:first-child { color: var(--ink); white-space: nowrap; }
+
+    .note {
+      margin: 20px 0;
+      padding: 14px 18px;
+      border-left: 2px solid var(--ice);
+      background: linear-gradient(90deg, rgba(247, 226, 176, 0.07), transparent 70%);
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .note strong { color: var(--ice-bright); }
+
+    .tree {
+      margin: 16px 0 22px;
+      padding: 20px;
+      border: 1px solid var(--line-soft);
+      border-radius: 12px;
+      background: rgba(8, 10, 16, 0.6);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      line-height: 2;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .tree b { color: var(--ice-bright); font-weight: 500; }
+    .tree i { color: var(--faint); font-style: normal; }
+
+    .badge {
+      display: inline-block;
+      padding: 1px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ice);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+
+    .doc-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 26px;
+      border-top: 1px solid var(--line);
+      color: var(--faint);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+    }
+
+    .doc-footer a { color: var(--ice); }
+
+    @media (max-width: 860px) {
+      .page { width: calc(100% - 36px); padding-top: 44px; }
+      .layout { grid-template-columns: 1fr; gap: 32px; margin-top: 34px; }
+      .toc {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 18px;
+        padding: 0 0 18px;
+        border-left: 0;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .toc p { width: 100%; margin-bottom: 6px; padding-left: 0; }
+      .toc a { padding: 3px 0; border-left: 0; margin-left: 0; font-size: 11.5px; }
+      .masthead-meta { text-align: left; }
+      .doc section { margin-bottom: 46px; }
+      .doc h2 { flex-wrap: wrap; gap: 8px; }
+      pre { font-size: 11px; padding: 14px 16px; }
+    }
+
+    @media print {
+      body { background: #fff; color: #111; }
+      body::before { display: none; }
+      .toc, .masthead-meta { display: none; }
+      .layout { grid-template-columns: 1fr; }
+      .doc p, td, li { color: #333; }
+      pre { border-color: #ccc; background: #f6f6f6; color: #222; }
+      .page { width: 100%; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div>
+        <p class="kicker">RAW AE A · OBSERVATORY</p>
+        <h1>使用手册</h1>
+        <p>一份写给站长的说明书：如何修改轮盘、编辑展示框、调整宇宙背景，以及这套目录结构背后的编号规则。</p>
+      </div>
+      <div class="masthead-meta">
+        <span>版本 3.0 · 青蓝改版</span>
+        <span>适用于 RaWaEa 寰宇观测站</span>
+        <span>2026</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="toc" aria-label="目录">
+        <p>CONTENTS · 目录</p>
+        <a href="#intro">01 这次改了什么</a>
+        <a href="#start">02 打开与刷新</a>
+        <a href="#structure">03 目录结构</a>
+        <a href="#naming">04 标记规则</a>
+        <a href="#wheel">05 轮盘配置</a>
+        <a href="#frame">06 展示框配置</a>
+        <a href="#content">07 内容写法</a>
+        <a href="#theme">08 背景影像</a>
+        <a href="#interact">09 操作与快捷键</a>
+        <a href="#faq">10 常见问题</a>
+        <a href="#maint">11 维护建议</a>
+      </nav>
+
+      <main class="doc">
+        <section id="intro">
+          <h2><span>01</span>这次改了什么</h2>
+          <p>整站从「安静的房间」换成了「一间悬在宇宙里的观测站」，配色由暖金转为青蓝。核心变化有八点：</p>
+          <ul>
+            <li><strong>黑洞影像背景</strong>：三张 NASA/JPL-Caltech 高清黑洞照片随机轮换，1.6 秒交叉淡入，右下角标注出处。</li>
+            <li><strong>真实照片墙</strong>：光影区换成 12 张来自 Wikimedia Commons 的实景照片，按原始比例瀑布流排布，全部随站点打包。</li>
+            <li><strong>开屏页</strong>：进入站点先看到一张更高分辨率的黑洞影像（缓慢推近、循环播放），正下方是一个透明按钮「- 探寻 -」。</li>
+            <li><strong>近透明毛玻璃</strong>：轮盘与展示框都改成很轻的磨砂玻璃，边框、投影与四角都压到最低，黑洞的光可以透过面板看见。</li>
+            <li><strong>缩小的双面板</strong>：轮盘只留右半圈并缩到 500px 以内，展示框限制在 960px，两者之间空出一片能看见背景的真空区。</li>
+            <li><strong>天气与 IP 系统已彻底删除</strong>：不再嗅探 IP、不再请求天气，相关接口、开关、玻璃天气与配置字段全部移除。</li>
+            <li><strong>页面本身不滚动</strong>：只有展示框内部滚动，内容再长也不会把页面顶开。</li>
+            <li><strong>内容全部文件化</strong>：轮盘读 <code>轮盘/</code>，展示框读 <code>展示框/</code>，改文字、换图片都不用碰代码。</li>
+          </ul>
+          <div class="note">
+            <strong>设计约定：</strong>除了「左侧轮盘」和「右侧展示框」，页面其他部分都不使用毛玻璃（backdrop-filter）。按钮、阅读层、提示条一律使用实色，以保证层级干净、性能稳定。
+          </div>
+        </section>
+
+        <section id="start">
+          <h2><span>02</span>打开与刷新</h2>
+          <p>整个站是纯静态页面，<strong>不需要安装、不需要构建、不需要本地服务器</strong>：直接双击 <code>index.html</code> 即可，配置通过 <code>&lt;script&gt;</code> 读取，因此在本机文件模式下也能正常运行。</p>
+          <ul>
+            <li>推荐浏览器：Chrome、Edge（Windows / macOS 均可），Safari 16 以上也可以。</li>
+            <li>修改任何配置文件后，回到浏览器按 <code>Ctrl + F5</code>（macOS：<code>Cmd + Shift + R</code>）强制刷新。</li>
+            <li>部署到 GitHub Pages、Vercel 或任意静态主机时，把整个文件夹原样上传即可。</li>
+          </ul>
+
+          <h3>开屏页</h3>
+          <p>每次打开站点都会先看到 NASA/JPL-Caltech 的黑洞影像：画面缓慢推近、循环播放，正下方是一个透明按钮「- 探寻 -」。点击按钮、点击画面任意处、按任意键或向下滚动滚轮，都会进入主界面；进入时开屏淡出，露出同一套黑洞背景。</p>
+          <p>想跳过开屏直接进入，可以在地址后加 <code>?enter</code>；想直接打开某个分区，再加锚点，例如 <code>index.html?enter#s4</code> 会直接进入「光影」。</p>
+
+          <div class="note">
+            <strong>静帧模式：</strong>在地址后加 <code>?still</code>（例如 <code>index.html?still</code>）会关闭所有入场动画，方便截图、录屏或排查渲染问题。日常访问不需要加。
+          </div>
+        </section>
+
+        <section id="structure">
+          <h2><span>03</span>目录结构</h2>
+          <p>所有可编辑的内容集中在两个文件夹里：<b>轮盘</b>决定「有哪些分区」，<b>展示框</b>决定「每个分区里显示什么」。</p>
+          <div class="tree">R/
+├─ index.html                     页面骨架（含开屏页）
+├─ styles.css                     全部样式
+├─ app.js                         配置装载、开屏、轮盘与展示框联动
+├─ <b>使用手册.html</b>           本文件
+├─ <b>assets/</b>
+│   ├─ <b>blackholes/</b>             随机轮换的黑洞背景
+│   │   ├─ 01-tidal.jpg              NASA PIA20027
+│   │   └─ 02-echo.jpg               NASA PIA23866
+│   ├─ splash-blackhole.jpg          开屏 + 第三张背景（PIA22085）
+│   └─ <b>photos/</b>              12 张真实照片（光影瀑布流）
+│       ├─ hangzhou.jpg  kyoto.jpg      santorini.jpg
+│       ├─ tokyo.jpg     iceland.jpg    paris.jpg
+│       ├─ newyork.jpg   norway.jpg     huangshan.jpg
+│       └─ capetown.jpg  sydney.jpg     rio.jpg
+│
+├─ <b>轮盘/</b>
+│   ├─ 索引.js                    <i>列出所有轮盘配置，决定顺序</i>
+│   ├─ AA-WL-HM-“首页”.js
+│   ├─ AB-WL-WR-“文章”.js
+│   ├─ AC-WL-PJ-“项目”.js
+│   ├─ AD-WL-GL-“光影”.js
+│   └─ AE-WL-CT-“联系”.js
+│
+└─ <b>展示框/</b>
+    ├─ 索引.js                    <i>登记每个分区的子文件夹与配置文件</i>
+    ├─ AA-FR-HM-“首页”/
+    │   ├─ AA-CF-HM-“首页配置”.js
+    │   └─ AA-CN-HM-“首页内容”.js
+    ├─ AB-FR-WR-“文章”/
+    │   ├─ AB-CF-WR-“文章配置”.js
+    │   └─ AB-CN-WR-“文章内容”.js
+    ├─ AD-FR-GL-“光影”/           <i>瀑布流图片墙</i>
+    │   ├─ AD-CF-GL-“光影配置”.js
+    │   └─ AD-CN-GL-“光影内容”.js
+    └─ …（项目 / 联系 同理）</div>
+          <p>注意：<code>轮盘/索引.js</code> 与 <code>展示框/索引.js</code> 是两张「目录页」，它们本身不参与编号，但新增分区时必须同步登记，否则页面读不到。</p>
+        </section>
+
+        <section id="naming">
+          <h2><span>04</span>标记规则</h2>
+          <p>所有分区文件与文件夹统一使用这种格式：</p>
+          <pre><code>XX-XX-XX-“name”</code></pre>
+          <ul>
+            <li><strong>X</strong>：必须是两个大写字母（A–Z）。</li>
+            <li><strong>name</strong>：给人看的标签，放在中文引号 <code>“ ”</code> 里，机器不读取它的含义。</li>
+            <li>机器只解析前三段编号；展示框匹配时只看<strong>第一段编号</strong>。</li>
+          </ul>
+
+          <h3>三段编号的含义</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>位置</th><th>含义</th><th>示例</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>第 1 段</td><td>分区编号：AA = 01，AB = 02，AC = 03 … AZ = 26</td><td><code>AA</code> → 首页</td></tr>
+                <tr><td>第 2 段</td><td>文件域：<code>WL</code> 轮盘 / <code>FR</code> 展示框 / <code>CF</code> 配置 / <code>CN</code> 内容</td><td><code>WL</code>、<code>FR</code></td></tr>
+                <tr><td>第 3 段</td><td>家族指纹：同一分区的所有文件保持一致</td><td><code>HM</code> 首页、<code>WR</code> 文章、<code>PJ</code> 项目、<code>GL</code> 光影、<code>CT</code> 联系</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>它们如何对应</h3>
+          <p>轮盘点亮 <code>AA-WL-HM</code>（首页）时，展示框会读取第一段 <code>AA</code>，去 <code>展示框/索引.js</code> 里找以 <code>AA</code> 开头的那一栏，于是打开 <code>展示框/AA-FR-HM-“首页”/</code>，再按其中的配置读取内容文件。</p>
+          <div class="note">
+            <strong>只改标签是安全的：</strong>把 <code>AA-FR-HM-“首页”</code> 改名成 <code>AA-FR-HM-“家”</code> 不会影响运行——只要 <code>展示框/索引.js</code> 里的 <code>dir</code> 跟着改。机器比对的是 <code>AA</code>。
+          </div>
+        </section>
+
+        <section id="wheel">
+          <h2><span>05</span>轮盘配置</h2>
+          <p>轮盘决定分区的数量、顺序、名称、图标与强调色。每个分区一个文件，登记在 <code>轮盘/索引.js</code> 里。</p>
+
+          <h3>轮盘 / 索引.js</h3>
+          <pre><code>window.RAW_WHEEL_INDEX = {
+  files: [
+    "轮盘/AA-WL-HM-“首页”.js",
+    "轮盘/AB-WL-WR-“文章”.js",
+    "轮盘/AC-WL-PJ-“项目”.js",
+    "轮盘/AD-WL-GL-“光影”.js",
+    "轮盘/AE-WL-CT-“联系”.js"
+  ]
+};</code></pre>
+
+          <h3>分区配置（例：首页）</h3>
+          <pre><code>RawaeaWheel.add({
+  code: "AA-WL-HM",          // 编号，必须与展示框第一段一致
+  name: "首页",              // 轮盘上显示的名字
+  english: "HOME",           // 展示框右上角的小字
+  icon: "home",              // 图标名
+  accent: "#9adcff"          // 强调色
+});</code></pre>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td>code</td><td>三段编号，见「标记规则」。决定排序与展示框匹配。</td></tr>
+                <tr><td>name</td><td>轮盘、中心圆盘、展示框标题都会用到。</td></tr>
+                <tr><td>english</td><td>英文小字，显示在展示框右上角与轮盘旁注。</td></tr>
+                <tr><td>icon</td><td>可选：<code>home</code>、<code>writing</code>、<code>projects</code>、<code>gallery</code>、<code>contact</code>、<code>planet</code>、<code>orbit</code>、<code>moon</code>。留空则使用 <code>orbit</code>。</td></tr>
+                <tr><td>accent</td><td>该分区的强调色，影响轮盘高亮、标题描点、按钮等。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>轮盘的排列顺序由第一段编号决定（AA → AB → AC …），标签在盘面上的位置由数量自动均分，所以增删分区后分布依旧均匀。</p>
+        </section>
+
+        <section id="frame">
+          <h2><span>06</span>展示框配置</h2>
+          <p>每个分区对应 <code>展示框/</code> 下的一个子文件夹，里面固定放两份文件：<strong>配置</strong>与<strong>内容</strong>。</p>
+
+          <h3>展示框 / 索引.js</h3>
+          <pre><code>window.RAW_FRAME_INDEX = {
+  frames: [
+    {
+      dir: "展示框/AA-FR-HM-“首页”",
+      config: "AA-CF-HM-“首页配置”.js"
+    },
+    { dir: "展示框/AB-FR-WR-“文章”", config: "AB-CF-WR-“文章配置”.js" }
+    // …
+  ]
+};</code></pre>
+
+          <h3>配置文件</h3>
+          <pre><code>RawaeaFrame.define({
+  code: "AA-FR-HM",            // 必须与轮盘第一段一致
+  name: "首页",
+  english: "HOME",
+  eyebrow: "WELCOME · 序章",   // 展示框顶部眉标
+  note: "受引力约束的一小块安静", // 展示框底部注记
+  content: ["AA-CN-HM-“首页内容”.js"]  // 内容文件，可多个
+});</code></pre>
+
+          <h3>内容文件</h3>
+          <p>内容文件通过 <code>RawaeaFrame.content(编号, 数据)</code> 注册。最短的写法只需要一段 <code>html</code>：</p>
+          <pre><code>RawaeaFrame.content("AA-FR-HM", {
+  html: `
+    &lt;div class="home"&gt;
+      &lt;p class="overline"&gt;A QUIET CORNER IN THE COSMOS&lt;/p&gt;
+      &lt;h1 class="display-title"&gt;在引力之外，&lt;br&gt;&lt;em&gt;收藏一束光。&lt;/em&gt;&lt;/h1&gt;
+      &lt;p class="lead"&gt;你好，我是 RaWaEa。&lt;/p&gt;
+    &lt;/div&gt;
+  `
+});</code></pre>
+          <div class="note">
+            <strong>提示：</strong>内容文件是普通的 JS 文件，反引号（` `）包住的就是 HTML。请在中文引号 <code>“ ”</code> 里写字，不要在里面再使用反引号，以免提前结束字符串。
+          </div>
+
+          <h3>新增一个分区的完整步骤</h3>
+          <ol>
+            <li>复制 <code>轮盘/AE-WL-CT-“联系”.js</code>，改名为 <code>轮盘/AF-WL-XX-“新名字”.js</code>，把 <code>code</code> 改成 <code>AF-WL-XX</code>，改好 <code>name / english / icon / accent</code>。</li>
+            <li>在 <code>轮盘/索引.js</code> 的 <code>files</code> 末尾追加这个新路径。</li>
+            <li>复制整个 <code>展示框/AE-FR-CT-“联系”/</code> 为 <code>展示框/AF-FR-XX-“新名字”/</code>，两份文件同步改名并把编号换成 <code>AF</code>。</li>
+            <li>在 <code>展示框/索引.js</code> 的 <code>frames</code> 里追加 <code>{ dir, config }</code>。</li>
+            <li>刷新页面，第六个分区就会出现在轮盘上。</li>
+          </ol>
+        </section>
+
+        <section id="content">
+          <h2><span>07</span>内容写法</h2>
+          <p>展示框里的 HTML 片段完全自由，但推荐沿用现有的类名，这样能直接继承青蓝样式。</p>
+
+          <h3>常用类名</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>类名</th><th>用途</th></tr></thead>
+              <tbody>
+                <tr><td>.overline</td><td>冰蓝小眉标，例：<code>SELECTED NOTES</code></td></tr>
+                <tr><td>.display-title</td><td>首页大标题，<code>&lt;em&gt;</code> 部分为冰蓝斜体</td></tr>
+                <tr><td>.lead</td><td>正文导语</td></tr>
+                <tr><td>.section-heading</td><td>分区标题 + 右侧说明</td></tr>
+                <tr><td>.post-list / .post-row</td><td>文章列表</td></tr>
+                <tr><td>.project-grid / .project-card</td><td>项目卡片</td></tr>
+                <tr><td>.masonry / .masonry-item</td><td>光影瀑布流图片墙</td></tr>
+                <tr><td>.contact-layout / .contact-card</td><td>联系方式</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>让元素可交互</h3>
+          <p>在任意元素上加这三个属性，就会自动接上交互：</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>属性</th><th>效果</th></tr></thead>
+              <tbody>
+                <tr><td><code>data-goto="1"</code></td><td>跳到第 2 个分区（编号从 0 开始）</td></tr>
+                <tr><td><code>data-post="0"</code></td><td>打开文章数组中第 1 篇的阅读层</td></tr>
+                <tr><td><code>data-copy="hello@rawaea.me"</code></td><td>点击复制文本并提示</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>文章：数组 + 占位符</h3>
+          <p>「文章」分区的配置里多一个 <code>posts</code> 数组，列表会自动生成。模板中写 <code>{{POSTS}}</code> 的位置会被替换成文章行。</p>
+          <pre><code>RawaeaFrame.content("AB-FR-WR", {
+  posts: [
+    {
+      date: "2026.10.28",
+      tags: "设计 / 思考",
+      reading: "6 min",
+      title: "在黑洞边缘，练习安静",
+      body: `&lt;p&gt;正文段落……&lt;/p&gt;
+             &lt;blockquote&gt;引用一句……&lt;/blockquote&gt;`
+    }
+  ],
+  html: `
+    &lt;div class="writing"&gt;
+      &lt;header class="section-heading"&gt;…&lt;/header&gt;
+      &lt;div class="post-list"&gt;{{POSTS}}&lt;/div&gt;
+    &lt;/div&gt;
+  `
+});</code></pre>
+          <div class="note">
+            <strong>注意：</strong><code>{{POSTS}}</code> 只出现一次即可；文章正文里可以随意使用 <code>&lt;p&gt;</code>、<code>&lt;blockquote&gt;</code>、<code>&lt;strong&gt;</code>，阅读层会自动套用排版。
+          </div>
+
+          <h3>光影：瀑布流图片</h3>
+          <p>「光影」的内容文件里放一个 <code>gallery</code> 数组，模板中的 <code>{{GALLERY}}</code> 会展开成瀑布流。每个条目需要 <code>src</code>，可选的 <code>title</code> / <code>place</code> 显示在图片底部，<code>credit</code> 会写进悬停提示；图片高度按原始比例自动计算，桌面三列、手机两列。</p>
+          <pre><code>RawaeaFrame.content("AD-FR-GL", {
+  gallery: [
+    {
+      src: "assets/photos/hangzhou.jpg",
+      title: "西湖的午后",
+      place: "浙江 · 杭州",
+      credit: "Yinweichen / Wikimedia · CC BY-SA 4.0"
+    }
+  ],
+  html: `
+    &lt;div class="gallery"&gt;
+      &lt;div class="masonry"&gt;{{GALLERY}}&lt;/div&gt;
+    &lt;/div&gt;
+  `
+});</code></pre>
+
+          <h3>换成自己的照片</h3>
+          <p>把照片放进 <code>assets/photos/</code>，用 1600px 宽左右最合适；然后把 <code>src</code> 指过去即可。也可以直接替换同名的 12 张图，版式不用改。</p>
+          <div class="note">
+            <strong>授权：</strong>现有 12 张照片来自 Wikimedia Commons（CC BY-SA / CC BY / CC0），作者与协议见「背景影像」章节。换成自己的照片时，记得同步更新 <code>credit</code> 与手册里的清单。
+          </div>
+        </section>
+
+        <section id="theme">
+          <h2><span>08</span>背景影像</h2>
+          <p>整站背景是三张 NASA / JPL-Caltech 黑洞影像，<strong>每次打开随机挑一张</strong>；停留时每 70 秒自动换一张，切换分区时也会再抽一张。换图用 1.6 秒交叉淡入，右下角同步显示出处。</p>
+
+          <h3>影像池</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>文件</th><th>画面</th><th>来源</th></tr></thead>
+              <tbody>
+                <tr><td>assets/blackholes/01-tidal.jpg</td><td>黑洞撕裂恒星（3482×1959）</td><td>NASA/JPL-Caltech · PIA20027 · 公有领域</td></tr>
+                <tr><td>assets/blackholes/02-echo.jpg</td><td>吸积盘与尘埃环（3840×2160）</td><td>NASA/JPL-Caltech · PIA23866 · 公有领域</td></tr>
+                <tr><td>assets/splash-blackhole.jpg</td><td>黑洞与喷流（5120×2880，兼作开屏）</td><td>NASA/JPL-Caltech · PIA22085 · 公有领域</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>想固定看某一张，在地址后加 <code>?bh=1</code>、<code>?bh=2</code> 或 <code>?bh=3</code>（顺序同上表）；不加则随机。新增影像：把 jpg 放进 <code>assets/blackholes/</code>，再在 <code>app.js</code> 顶部的 <code>BLACKHOLES</code> 数组里加一条 <code>{ src, credit }</code> 即可。</p>
+
+          <p>背景亮度集中在 <code>styles.css</code> 的 <code>.cosmos-photo</code>：<code>filter: blur(1.4px) brightness(0.9) saturate(1.03)</code>；暗角在 <code>.cosmos-veil</code>。想更亮就把 <code>brightness</code> 往上调，同时把暗角的 alpha 压低；想更清晰就把 <code>blur(1.4px)</code> 改小或删掉。</p>
+          <div class="note">
+            <strong>为什么轻微虚化：</strong>黑洞原图对比度很高，直接铺满会压住文字。1.4px 的模糊既保留了星云与吸积盘的质感，又让玻璃面板上的字更清楚。
+          </div>
+
+          <h3>玻璃：一直半透明</h3>
+          <p>轮盘与展示框使用固定不透明度（展示框 34%、轮盘 30%），不再随天气、分区或悬停改变透明度；只保留 24px 的磨砂模糊、极细的描边与顶部高光。相关样式在 <code>.frame-glass</code>、<code>.wheel-glass</code>、<code>.display-frame</code> 三处。</p>
+
+          <h3>光影：真实照片墙</h3>
+          <p>「光影」区域是 12 张真实照片，全部来自 Wikimedia Commons，随站点打包在 <code>assets/photos/</code>，按原始比例排成瀑布流（桌面 3 列、手机 2 列）。</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>标题</th><th>地点</th><th>文件</th><th>作者与授权</th></tr></thead>
+              <tbody>
+                <tr><td>西湖的午后</td><td>浙江 · 杭州</td><td>hangzhou.jpg</td><td>Yinweichen / CC BY-SA 4.0</td></tr>
+                <tr><td>岚山竹径</td><td>京都 · 日本</td><td>kyoto.jpg</td><td>Erol Ahmed / CC0</td></tr>
+                <tr><td>伊亚的白与蓝</td><td>圣托里尼 · 希腊</td><td>santorini.jpg</td><td>Norbert Nagel / CC BY-SA 3.0</td></tr>
+                <tr><td>富士远望</td><td>东京 · 日本</td><td>tokyo.jpg</td><td>Syced / CC0</td></tr>
+                <tr><td>冰川瀑布</td><td>塞尔福斯 · 冰岛</td><td>iceland.jpg</td><td>Martin Falbisoner / CC BY-SA 4.0</td></tr>
+                <tr><td>塞纳河落日</td><td>巴黎 · 法国</td><td>paris.jpg</td><td>Lawrence W.K. Ho / CC BY-SA 3.0</td></tr>
+                <tr><td>曼哈顿蓝调</td><td>纽约 · 美国</td><td>newyork.jpg</td><td>King of Hearts / CC BY-SA 4.0</td></tr>
+                <tr><td>峡湾之上</td><td>盖朗厄尔 · 挪威</td><td>norway.jpg</td><td>Ximonic / CC BY-SA 3.0</td></tr>
+                <tr><td>黄山云海</td><td>安徽 · 中国</td><td>huangshan.jpg</td><td>eviltomthai / CC BY 2.0</td></tr>
+                <tr><td>桌山的褶皱</td><td>开普敦 · 南非</td><td>capetown.jpg</td><td>Dietmar Rabich / CC BY-SA 4.0</td></tr>
+                <tr><td>歌剧院黄昏</td><td>悉尼 · 澳大利亚</td><td>sydney.jpg</td><td>Benh LIEU SONG / CC BY-SA 4.0</td></tr>
+                <tr><td>糖面包山日出</td><td>里约 · 巴西</td><td>rio.jpg</td><td>Donatas Dabravolskas / CC BY-SA 4.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>换图有两种方式：直接替换 <code>assets/photos/</code> 里的同名文件（建议统一 1600px 宽），或在 <code>展示框/AD-FR-GL-“光影”/AD-CN-GL-“光影内容”.js</code> 的 <code>gallery</code> 数组里增删条目。每条记录包含 <code>src / title / place / credit</code>，<code>credit</code> 会显示在图片的悬停提示里。</p>
+          <div class="note">
+            <strong>版权：</strong>12 张照片分别以 CC BY-SA 3.0 / 4.0、CC BY 2.0 与 CC0 授权；NASA 的两张黑洞图属于公有领域。用于个人站点时保留上表署名即可，二次分发请遵守对应协议。
+          </div>
+        </section>
+
+        <section id="interact">
+          <h2><span>09</span>操作与快捷键</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>操作</th><th>结果</th></tr></thead>
+              <tbody>
+                <tr><td>点击开屏页 / 按任意键 / 滚动</td><td>进入主界面</td></tr>
+                <tr><td>在轮盘上滚动</td><td>切换分区，展示框内容同步更新</td></tr>
+                <tr><td>点击轮盘标签</td><td>直接跳到该分区</td></tr>
+                <tr><td>点击上下箭头</td><td>上一项 / 下一项</td></tr>
+                <tr><td>在展示框内滚动</td><td>阅读本分区内容（页面本身不会滚动）</td></tr>
+                <tr><td>← / →</td><td>切换分区</td></tr>
+                <tr><td>↑ / ↓、PageUp / PageDown</td><td>滚动展示框内容</td></tr>
+                <tr><td>Home / End</td><td>跳到第一个 / 最后一个分区</td></tr>
+                <tr><td>Esc</td><td>关闭文章阅读层</td></tr>
+                <tr><td>点击“使用手册”</td><td>新标签页打开本文件</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>展示框底部有一条冰蓝进度线，会随着内容滚动向前推进；右上角的编号（01 / 05）始终对应轮盘的位置。想直接分享某个分区，可以在网址后加 <code>#s2</code>（第 2 个分区）这样的锚点。</p>
+        </section>
+
+        <section id="faq">
+          <h2><span>10</span>常见问题</h2>
+
+          <h3>背景是哪张黑洞照片？</h3>
+          <p>背景在三张 NASA/JPL-Caltech 黑洞影像之间随机轮换：PIA20027（黑洞撕裂恒星）、PIA23866（吸积盘与尘埃环）、PIA22085（黑洞与喷流，也是开屏图）。每次打开随机一张，停留时每 70 秒换一张，切换分区也会换。右下角会标注当前影像的编号。</p>
+
+          <h3>为什么背景是虚的？</h3>
+          <p>黑洞原图对比度很高，直接铺满会压住文字，所以加了 1.4px 的轻微模糊与一层暗角。想要更锐利，把 <code>.cosmos-photo</code> 的 <code>blur(1.4px)</code> 改小或删掉即可。</p>
+
+          <h3>光影里的照片能换吗？</h3>
+          <p>能。12 张照片都在 <code>assets/photos/</code>，替换同名文件即可；也可以在 <code>AD-CN-GL-“光影内容”.js</code> 的 <code>gallery</code> 数组里增删条目。每张图的作者与授权见「背景影像」章节的表格。</p>
+
+          <h3>为什么左边的轮盘只露出一半？</h3>
+          <p>这是本版的版式设计：轮盘整体左移，像嵌在屏幕边缘的罗盘。露出的右半圈正好朝向展示框，当前选中的分区永远停在 3 点钟方向。被裁掉的标签仍然可用：点下方的上下箭头、按 <code>←</code> / <code>→</code>，或在轮盘上滚动即可切换。手机端会自动恢复为完整轮盘。</p>
+
+          <h3>开屏页能去掉吗？</h3>
+          <p>可以。临时跳过用 <code>index.html?enter</code>；想永久去掉，把 <code>index.html</code> 里的 <code>&lt;section class="splash"&gt;…&lt;/section&gt;</code> 整段删除即可，进入状态会自动生效。</p>
+
+          <h3>图片加载失败会怎样？</h3>
+          <p>失败的图片会保留一个占位框（半透明 + 最小高度），不会让瀑布流塌掉。检查路径大小写与实际文件名即可。</p>
+
+          <h3>打开后一片漆黑，或出现 SIGNAL LOST</h3>
+          <p>说明浏览器没有读到配置。请确认 <code>index.html</code>、<code>app.js</code>、<code>轮盘/</code>、<code>展示框/</code> 在<strong>同一层文件夹</strong>里，并且 <code>轮盘/索引.js</code> 存在。如果移动过整个文件夹，路径保持不变即可。</p>
+
+          <h3>改了文字，页面没有变化</h3>
+          <p>浏览器缓存了旧的 JS 文件。按 <code>Ctrl + F5</code> 强制刷新；若仍不生效，检查是否改错了分区（编号是否对应），以及 <code>content</code> 里列出的文件名与实际文件名是否完全一致（包含 <code>“ ”</code>）。</p>
+
+          <h3>展示框显示 “NO SIGNAL · 这一站还没有收到内容”</h3>
+          <p>轮盘有这一项，但展示框没找到对应子文件夹。检查三处：<code>展示框/索引.js</code> 是否登记；配置里的 <code>code</code> 第一段是否与轮盘一致；内容文件是否写进了 <code>content</code> 列表。</p>
+
+          <h3>轮盘顺序乱了 / 少了某一项</h3>
+          <p>轮盘按第一段编号排序（AA→AB→AC…）。如果新文件没有出现在 <code>轮盘/索引.js</code> 的 <code>files</code> 里，它就不会被加载。</p>
+
+          <h3>内容太长，把展示框撑开了</h3>
+          <p>不会撑开：展示框内部固定高度、内部滚动。如果希望一屏读完，请精简卡片数量或调小字号；如果希望阅读更从容，可以在内容最外层套 <code>&lt;div class="writing"&gt;</code> 之类的大段落。</p>
+
+          <h3>可以去掉某个分区吗</h3>
+          <p>可以。删除 <code>轮盘/索引.js</code> 中对应的那一行即可（文件与展示框文件夹可保留作备份）。剩余分区会自动重新均分盘面。若要恢复，把路径加回去即可。</p>
+
+          <h3>中文引号打不出来怎么办</h3>
+          <p>文件名里的 <code>“ ”</code> 是标记的一部分，建议直接从现有文件复制。Windows 文件名不允许半角双引号 <code>"</code>，所以请勿替换成半角。</p>
+
+          <h3>想换成自己的域名 / 部署</h3>
+          <p>把整个文件夹上传到任意静态托管即可，不需要后端。托管平台对中文文件名支持良好，但为了稳妥，建议保持 UTF-8 编码上传。</p>
+        </section>
+
+        <section id="maint">
+          <h2><span>11</span>维护建议</h2>
+          <ul>
+            <li><strong>先备份再动手：</strong>改配置前复制一份 <code>轮盘/</code> 与 <code>展示框/</code>，出问题能立刻还原。</li>
+            <li><strong>一次只加一个分区：</strong>加完立刻刷新验证，比一次性改五处更容易定位问题。</li>
+            <li><strong>编号就是秩序：</strong>不要为了好看随意改第一段字母，它决定了轮盘顺序和展示框的匹配。</li>
+            <li><strong>标签可以随意写：</strong><code>“ ”</code> 里的文字只影响阅读体验，不影响程序。</li>
+            <li><strong>配色克制：</strong>强调色保持一两个色相，背景保持一张图，冰蓝留给框架与重点。</li>
+          </ul>
+          <div class="note">
+            <strong>一句话记住这套结构：</strong>轮盘决定「去哪」，展示框决定「看到什么」，编号决定「谁对谁」。改内容只改展示框，改顺序只改轮盘索引。
+          </div>
+        </section>
+
+        <footer class="doc-footer">
+          <span>RAW AE A · OBSERVATORY · 使用手册 v4.1</span>
+          <a href="index.html">← 返回站点</a>
+        </footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
