@@ -19,9 +19,7 @@ RawaeaFrame.content("AE-FR-CT", {
         </button>
 
         <div class="social-list">
-          <a class="social-link" href="https://github.com/RaWaEa" target="_blank" rel="noreferrer"><span>GitHub</span><span>↗</span></a>
-          <a class="social-link" href="https://x.com/RaWaEa" target="_blank" rel="noreferrer"><span>X / Twitter</span><span>↗</span></a>
-          <a class="social-link" href="https://www.instagram.com/" target="_blank" rel="noreferrer"><span>Instagram</span><span>↗</span></a>
+          <a class="social-link" href="https://github.com/SiZa-h" target="_blank" rel="noreferrer"><span>GitHub</span><span>↗</span></a>
         </div>
 
         <p class="contact-note">通常在 1–2 个工作日内回复。<br>如果邮件没有抵达，也可以在任意一个入口找到我。</p>
