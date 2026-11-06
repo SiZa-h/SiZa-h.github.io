@@ -15,7 +15,7 @@ RawaeaFrame.content("AC-FR-PJ", {
       <article class="project-card">
         <div class="project-top"><span>WEB APP / 01</span><span class="project-state"><i></i>进行中</span></div>
         <div class="project-number">/ 001</div>
-        <h3></h3>
+        <h3>NEW</h3>
         <p></p>
         <div class="tag-row"><span class="tag">Next.js</span><span class="tag">IndexedDB</span><span class="tag">Motion</span></div>
       </article>
